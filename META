@@ -1,0 +1,11 @@
+# OASIS_START
+# DO NOT EDIT (digest: ed0bd7122c2e9c9769fc91426d720106)
+version = "0.1"
+description = "Create Apple Plists"
+archive(byte) = "plist.cma"
+archive(byte, plugin) = "plist.cma"
+archive(native) = "plist.cmxa"
+archive(native, plugin) = "plist.cmxs"
+exists_if = "plist.cmxa"
+# OASIS_STOP
+

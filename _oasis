@@ -1,0 +1,18 @@
+OASISFormat: 0.4
+Name:        plist
+Version:     0.1
+Synopsis:    Create Apple Plists
+Authors:     Edgar Aroutiounian <edgar.factorial@gmail.com>
+Maintainers: Edgar Aroutiounian <edgar.factorial@gmail.com>
+Homepage:    https://github.com/fxfactorial/ocaml-plist
+License:     BSD-3-clause
+Plugins:     META (0.4), DevFiles (0.4)
+BuildTools: ocamlbuild
+
+Description:
+  Create Apple plists
+
+Library plist
+  Path:         .
+  Modules:      Plist
+  CompiledObject: native
