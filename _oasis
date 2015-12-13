@@ -16,3 +16,4 @@ Library plist
   Path:         .
   Modules:      Plist
   CompiledObject: native
+  BuildDepends: lambdasoup

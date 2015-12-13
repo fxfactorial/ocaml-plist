@@ -1,7 +1,8 @@
 # OASIS_START
-# DO NOT EDIT (digest: ed0bd7122c2e9c9769fc91426d720106)
+# DO NOT EDIT (digest: aaf94755d2479220db0693dcd7231244)
 version = "0.1"
 description = "Create Apple Plists"
+requires = "lambdasoup"
 archive(byte) = "plist.cma"
 archive(byte, plugin) = "plist.cma"
 archive(native) = "plist.cmxa"

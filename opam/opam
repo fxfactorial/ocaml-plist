@@ -22,4 +22,5 @@ build-test: [
 ]
 depends: [
   "ocamlfind" {build}
+  "lambdasoup"
 ]
