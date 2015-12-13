@@ -39,32 +39,6 @@ let make value =
   in
   Printf.sprintf "%s%s\n</plist>" boiler_plate (to_string value 1)
 
-let t = {|<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-	<key>DeviceID</key>
-	<integer>8</integer>
-	<key>MessageType</key>
-	<string>Attached</string>
-	<key>Properties</key>
-	<dict>
-		<key>ConnectionSpeed</key>
-		<integer>480000000</integer>
-		<key>ConnectionType</key>
-		<string>USB</string>
-		<key>DeviceID</key>
-		<integer>8</integer>
-		<key>LocationID</key>
-		<integer>336723968</integer>
-		<key>ProductID</key>
-		<integer>4764</integer>
-		<key>SerialNumber</key>
-		<string>4d8b2ca5edbe9af2e3c44e1b8f4a2a3dafb66ed9</string>
-	</dict>
-</dict>
-</plist>|}
-
 let parse_dict str : Yojson.Basic.json =
   let open Soup in
   let rec do_parse_node node =
