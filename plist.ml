@@ -39,7 +39,33 @@ let make value =
   in
   Printf.sprintf "%s%s\n</plist>" boiler_plate (to_string value 1)
 
-let parse_dict str =
+let t = {|<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>DeviceID</key>
+	<integer>8</integer>
+	<key>MessageType</key>
+	<string>Attached</string>
+	<key>Properties</key>
+	<dict>
+		<key>ConnectionSpeed</key>
+		<integer>480000000</integer>
+		<key>ConnectionType</key>
+		<string>USB</string>
+		<key>DeviceID</key>
+		<integer>8</integer>
+		<key>LocationID</key>
+		<integer>336723968</integer>
+		<key>ProductID</key>
+		<integer>4764</integer>
+		<key>SerialNumber</key>
+		<string>4d8b2ca5edbe9af2e3c44e1b8f4a2a3dafb66ed9</string>
+	</dict>
+</dict>
+</plist>|}
+
+let parse_dict str : Yojson.Basic.json =
   let open Soup in
   let rec do_parse_node node =
     match name node with
@@ -49,6 +75,7 @@ let parse_dict str =
       Integer (match leaf_text node with Some i -> int_of_string i | _ -> assert false)
     | "key" -> Key (match leaf_text node with Some s -> s | _ -> assert false)
     | "dict" ->
+      (* Little bit of a hack *)
       Array (List.map do_parse_node (children node |> elements |> to_list))
     | _ -> assert false
   in
@@ -63,4 +90,9 @@ let parse_dict str =
     | Array l :: rest -> go_through l accum
     | [] -> accum
   in
-  go_through pulled [] |> List.rev
+  let data = go_through pulled [] |> List.rev
+  |> List.map begin fun (key, value) ->
+    (key, match value with String i -> `String i | Integer i -> `Int i | _ -> assert false)
+  end
+  in
+  (`Assoc data : Yojson.Basic.json)
