@@ -1,14 +1,17 @@
-type node = Array of node list
-          | Dict of (string * node) list
-          | Int of int
-          | String of string
+type pnode = Array of pnode list
+           | Dict of (string * pnode) list
+           | Integer of int
+           | String of string
+           | Key of string
 
 let make value =
   let rec to_string e i_count = match e with
-    | Int i ->
+    | Integer i ->
       Printf.sprintf "\n%s<integer>%d</integer>" (String.make (i_count * 2) ' ') i
     | String s ->
       Printf.sprintf "\n%s<string>%s</string>" (String.make (i_count * 2) ' ') s
+    | Key s ->
+      Printf.sprintf "\n%s<key>%s</key>" (String.make (i_count * 2) ' ') s
     | Array l ->
       Printf.sprintf "\n%s<array>%s\n%s</array>"
         (String.make (i_count * 2) ' ')
@@ -38,24 +41,26 @@ let make value =
 
 let parse_dict str =
   let open Soup in
-  let dict = parse str $ "dict" in
-  let dict_keys = dict |> tags "key" |> fold begin fun accum a_key ->
-      match leaf_text a_key with
-      | None -> accum
-      | Some a -> a :: accum
-    end []
+  let rec do_parse_node node =
+    match name node with
+    | "string" ->
+      String (match leaf_text node with Some s -> s | _ -> assert false)
+    | "integer" ->
+      Integer (match leaf_text node with Some i -> int_of_string i | _ -> assert false)
+    | "key" -> Key (match leaf_text node with Some s -> s | _ -> assert false)
+    | "dict" ->
+      Array (List.map do_parse_node (children node |> elements |> to_list))
+    | _ -> assert false
   in
-  let dict_values = dict $$ ":not(key)" |> fold begin fun accum a_key ->
-      match leaf_text a_key with
-      | None -> accum
-      | Some innard -> (name a_key, innard) :: accum
-    end []
+  let first_dict = parse str $ "dict" |> children |> elements |> to_list in
+  let pulled = List.map do_parse_node first_dict in
+  let helper_stack = Stack.create () in
+  let rec go_through l accum = match l with
+    | Key k :: rest -> Stack.push k helper_stack; go_through rest accum
+    | (String _) as str :: rest -> go_through rest ((Stack.pop helper_stack, str) :: accum)
+    | (Integer _) as j :: rest -> go_through rest ((Stack.pop helper_stack, j) :: accum)
+    | (Dict l) :: rest -> go_through (List.map snd l) accum
+    | Array l :: rest -> go_through l accum
+    | [] -> accum
   in
-  List.combine dict_keys dict_values
-  |> List.map begin function
-      (key, (typ, data)) -> match typ with
-      | "string" -> (key, String data)
-      | "integer" -> (key, Int (int_of_string data))
-      | _ -> assert false
-  end
-  |> List.rev
+  go_through pulled [] |> List.rev
