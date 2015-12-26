@@ -17,3 +17,17 @@ Library plist
   Modules:      Plist
   CompiledObject: native
   BuildDepends: lambdasoup, yojson
+
+Executable test_plist
+  Path:               .
+  MainIs:             plist_test.ml
+  Build$:             flag(tests)
+  Custom:             true
+  CompiledObject:     best
+  Install:            false
+  BuildDepends:       plist, alcotest, osx-plutil
+
+Test test_parse_print
+  Run$:               flag(tests)
+  Command:            $test_plist
+  WorkingDirectory:   .

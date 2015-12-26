@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: 360bf291e86e45042066e39e557f8fb0)
+# DO NOT EDIT (digest: e82fa03018911e158925ed442c7aca56)
 # Ignore VCS directories, you can use the same kind of rule outside
 # OASIS_START/STOP if you want to exclude directories that contains
 # useless stuff for the build process
@@ -16,6 +16,16 @@ true: annot, bin_annot
 "_darcs": not_hygienic
 # Library plist
 "plist.cmxs": use_plist
+# Executable test_plist
+<plist_test.{native,byte}>: pkg_alcotest
+<plist_test.{native,byte}>: pkg_lambdasoup
+<plist_test.{native,byte}>: pkg_osx-plutil
+<plist_test.{native,byte}>: pkg_yojson
+<plist_test.{native,byte}>: use_plist
+<*.ml{,i,y}>: pkg_alcotest
 <*.ml{,i,y}>: pkg_lambdasoup
+<*.ml{,i,y}>: pkg_osx-plutil
 <*.ml{,i,y}>: pkg_yojson
+<*.ml{,i,y}>: use_plist
+<plist_test.{native,byte}>: custom
 # OASIS_STOP
