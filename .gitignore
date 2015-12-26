@@ -15,7 +15,13 @@ _build/
 *.byte
 *.native
 
+# alcotest outputs
+_tests/
+
 # oasis generated files
 setup.data
 setup.log
 plist.0.1
+
+# editor backups
+*~

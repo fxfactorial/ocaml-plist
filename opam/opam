@@ -24,4 +24,6 @@ depends: [
   "ocamlfind" {build}
   "yojson"
   "lambdasoup"
+  "alcotest"  {test}
+  "osx-plutil" {test}
 ]
