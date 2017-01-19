@@ -24,6 +24,7 @@ Library plist
   else
     CCOpt:
       -x objective-c $(OBJC_FLAGS)
+      -fconstant-string-class=NSConstantString
     CClib:
       -lgnustep-base -lobjc
   NativeOpt:
