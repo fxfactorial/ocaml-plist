@@ -41,16 +41,19 @@ let _ =
   BaseEnv.var_define
     "OBJC_FLAGS"
     (fun () ->
-       let system = Unix.open_process_in "uname" in
-       let os_name = input_line system in
+       let os_name =
+         OASISExec.run_read_one_line
+           ~ctxt:!OASISContext.default
+           "uname"
+           []
+       in
        if os_name = "Darwin" then ""
        else
-         begin
-           let proc = Unix.open_process_in "gnustep-config --objc-flags" in
-           let flags = input_line proc in
-           print_endline flags;
-           flags
-         end)
+         OASISExec.run_read_one_line
+           ~ctxt:!OASISContext.default
+           "gnustep-config"
+           ["--objc-flags"]
+    )
     ()
 
 let () = setup ();;
