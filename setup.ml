@@ -39,7 +39,7 @@ open BaseCompat.Compat_0_4
 
 let _ =
   BaseEnv.var_define
-    "DEBUGGING"
+    "OBJC_FLAGS"
     (fun () ->
        let system = Unix.open_process_in "uname" in
        let os_name = input_line system in

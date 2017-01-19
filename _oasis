@@ -23,7 +23,7 @@ Library plist
     CClib: -framework Foundation
   else
     CCOpt:
-      -x ObjC $(OBJC_FLAGS)
+      -x objective-c $(OBJC_FLAGS)
     CClib:
       -lgnustep-base -lobjc
   NativeOpt:
