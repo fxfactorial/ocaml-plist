@@ -1,7 +1,7 @@
 # -*- conf -*-
 OASISFormat:   0.4
 Name:          plist
-Version:       0.0.2
+Version:       1.0.0
 Synopsis:      OCaml Plist manipulation
 Authors:       Edgar Aroutiounian <edgar.factorial@gmail.com>
 Maintainers:   Edgar Aroutiounian <edgar.factorial@gmail.com>
