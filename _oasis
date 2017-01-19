@@ -48,14 +48,14 @@ SourceRepository master
   Location: https://github.com/fxfactorial/ocaml-plist.git
   Browser:  https://github.com/fxfactorial/ocaml-plist
 
-# Document api
-#   Title:              Documentation and API reference for Plist
-#   Type:               ocamlbuild (0.4)
-#   BuildTools+:        ocamldoc
-#   InstallDir:         $htmldir/javascriptcore
-#   PostCommand:        cp docs/style.css api.docdir && cp api.docdir/* docs
-#   XOCamlbuildPath:    docs
-#   XOCamlbuildModules: src/JavaScriptCore
-#   Install:            true
-#   XOCamlbuildExtraArgs:
-#     "-docflags '-colorize-code -charset utf-8 -hide JavaScriptCore -hide Pervasives'"
+Document api
+  Title:              Documentation and API reference for Plist
+  Type:               ocamlbuild (0.4)
+  BuildTools+:        ocamldoc
+  InstallDir:         $htmldir/plist
+  PostCommand:        cp docs/style.css api.docdir && cp api.docdir/* docs
+  XOCamlbuildPath:    docs
+  XOCamlbuildModules: lib/Plist
+  Install:            true
+  XOCamlbuildExtraArgs:
+    "-docflags '-colorize-code -charset utf-8 -hide Plist -hide Pervasives'"

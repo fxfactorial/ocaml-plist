@@ -26,3 +26,4 @@ plist.0.1
 # editor backups
 *~
 test-idea.plist
+api.docdir
