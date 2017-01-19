@@ -10,6 +10,7 @@
 #import <caml/alloc.h>
 #import <caml/custom.h>
 #import <caml/threads.h>
+#import <caml/fail.h>
 
 #define NSDict(v) (*(NSMutableDictionary**)Data_custom_val(v))
 
@@ -38,17 +39,14 @@ plist_ml_from_string(value str)
   CAMLparam1(str);
   CAMLlocal1(wrapper);
 
-  // NSString *s = [[NSString alloc] initWithUTF8String:String_val(str)];
-  // NSData *d = [NSJSONSerialization dataWithJSONObject:s options:0 error:nil];
   NSData *s1 = [NSData dataWithBytes:String_val(str) length:caml_string_length(str)];
   NSMutableDictionary *dict =
     [NSJSONSerialization JSONObjectWithData:s1
 				    options:NSJSONReadingMutableContainers
 				      error:nil];
-  // NSLog(@"test: %@", dict);
   wrapper = caml_alloc_custom(&nsdict_custom_ops, sizeof(id), 0, 1);
   memcpy(Data_custom_val(wrapper), &dict, sizeof(id));
-  // NSDictionary *d = [NSDictionary dictionaryWithContentsOfFile:(nonnull NSString *)]
+  [s1 release];
   CAMLreturn(wrapper);
 }
 
@@ -82,4 +80,16 @@ plist_ml_to_string(value plist_dict)
   CAMLreturn(ml_string);
 }
 
-// CAMLprim value
+CAMLprim value
+plist_ml_from_file(value filename)
+{
+  CAMLparam1(filename);
+  CAMLlocal1(plist);
+
+  BOOL file_exists = [[NSFileManager defaultManager] fileExistsAtPath:@(String_val(filename))];
+  if (file_exists == NO) caml_invalid_argument("File does not exist");
+  id p = [[NSDictionary alloc] initWithContentsOfFile:@(String_val(filename))];
+  plist = caml_alloc_custom(&nsdict_custom_ops, sizeof(id), 0, 1);
+  memcpy(Data_custom_val(plist), &p, sizeof(id));
+  CAMLreturn(plist);
+}

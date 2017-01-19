@@ -10,6 +10,10 @@ let () =
   in
   f ();
   Gc.major ();
-  print_endline "Finsihed"
-(* in *)
-(* Plist.to_file "test.plist" p *)
+  print_endline "Finsihed";
+
+  let b () =
+    let p = Plist.from_file "test-idea.plist" in
+    ()
+  in
+  b ()
