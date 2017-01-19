@@ -24,12 +24,12 @@ long nsdict_hash(value this_dict)
 }
 
 static struct custom_operations nsdict_custom_ops = {
- .identifier = "com.hyegar.plist",
- .finalize = release_nsdict,
- .compare = NULL,
- .hash = nsdict_hash,
- .serialize = NULL,
- .deserialize = NULL
+  .identifier = "com.hyegar.plist",
+  .finalize = release_nsdict,
+  .compare = NULL,
+  .hash = nsdict_hash,
+  .serialize = NULL,
+  .deserialize = NULL
 };
 
 CAMLprim value
@@ -77,6 +77,12 @@ plist_ml_to_file(value filename, value as_binary, value plist_dict)
 			format:NSPropertyListBinaryFormat_v1_0
 		       options:0
 			 error:&error];
+    if (error) {
+      const char *e_message = [[error localizedDescription] UTF8String];
+      [myPool drain];
+      caml_invalid_argument(e_message);
+    }
+
   }
 
   caml_release_runtime_system();
@@ -100,6 +106,12 @@ plist_ml_to_string(value plist_dict)
     [NSJSONSerialization dataWithJSONObject:d
 				    options:NSJSONWritingPrettyPrinted
 				      error:&error];
+  if (error) {
+    const char *e_message = [[error localizedDescription] UTF8String];
+    [myPool drain];
+    caml_invalid_argument(e_message);
+  }
+
   NSString *s = [[NSString alloc] initWithData:dump encoding:NSUTF8StringEncoding];
   const size_t length = [s lengthOfBytesUsingEncoding:NSUTF8StringEncoding];
 
@@ -148,6 +160,12 @@ plist_ml_to_bytes(value plist)
 			      format:NSPropertyListBinaryFormat_v1_0
 			     options:0
 			       error:&error];
+  if (error) {
+    const char *e_message = [[error localizedDescription] UTF8String];
+    [myPool drain];
+    caml_invalid_argument(e_message);
+  }
+
   raw_bytes = caml_alloc_string([d length]);
   memcpy(String_val(raw_bytes), [d bytes], [d length]);
   [myPool drain];
