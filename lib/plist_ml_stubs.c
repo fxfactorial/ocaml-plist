@@ -54,16 +54,24 @@ plist_ml_from_string(value str)
 }
 
 CAMLprim value
-plist_ml_to_file(value filename, value plist_dict)
+plist_ml_to_file(value filename, value as_binary, value plist_dict)
 {
-  CAMLparam2(filename, plist_dict);
+  CAMLparam3(filename, as_binary, plist_dict);
   NSAutoreleasePool *myPool = [[NSAutoreleasePool alloc] init];
-
-  NSMutableDictionary *d = NSDict(plist_dict);
+  NSError *error = nil;
+  id d = NSDict(plist_dict);
   NSString *filepath =
     [[NSString alloc] initWithBytes:String_val(filename)
 			     length:caml_string_length(filename)
 			   encoding:NSUTF8StringEncoding];
+
+  if (Bool_val(as_binary)) {
+    d = [NSPropertyListSerialization
+	  dataWithPropertyList:d
+			format:NSPropertyListBinaryFormat_v1_0
+		       options:0
+			 error:&error];
+  }
 
   caml_release_runtime_system();
   [d writeToFile:filepath atomically:YES];
