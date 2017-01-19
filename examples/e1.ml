@@ -15,4 +15,10 @@ let () =
     let s = Plist.to_string p in
     print_endline s;
   in
-  b ()
+  b ();
+
+  let h () =
+    let error = Plist.from_string "Hello world" in
+    ()
+  in
+  h ()

@@ -45,6 +45,11 @@ plist_ml_from_string(value str)
     [NSJSONSerialization JSONObjectWithData:s1
 				    options:NSJSONReadingMutableContainers
 				      error:&error];
+  if (error) {
+    const char *e_message = [[error localizedDescription] UTF8String];
+    [myPool drain];
+    caml_invalid_argument(e_message);
+  }
   wrapper = caml_alloc_custom(&nsdict_custom_ops, sizeof(id), 0, 1);
   // We need to hold onto the NSMutableDictionary
   [dict retain];
@@ -90,9 +95,10 @@ plist_ml_to_string(value plist_dict)
 
   NSMutableDictionary *d = NSDict(plist_dict);
   NSError *error = nil;
-  NSData *dump = [NSJSONSerialization dataWithJSONObject:d
-						 options:NSJSONWritingPrettyPrinted
-						   error:&error];
+  NSData *dump =
+    [NSJSONSerialization dataWithJSONObject:d
+				    options:NSJSONWritingPrettyPrinted
+				      error:&error];
   NSString *s = [[NSString alloc] initWithData:dump encoding:NSUTF8StringEncoding];
   const size_t length = [s lengthOfBytesUsingEncoding:NSUTF8StringEncoding];
 
