@@ -4,7 +4,7 @@ plists
 Use `plists` from OCaml, easily change to `Yojson`.
 
 ```
-$ opam install plist`
+$ opam install plist
 ```
 
 Works on `Linux` and `OS X`, lets you write `Yojson` as a binary
