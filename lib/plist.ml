@@ -1,4 +1,5 @@
-(** OCaml bindings to native Objective-C handling of plists *)
+(** OCaml bindings to native Objective-C handling of plists; works on
+    Linux and OS X *)
 
 type plist
 
@@ -13,7 +14,8 @@ external to_string : plist -> string = "plist_ml_to_string"
 
 (** Writing a plist to file, second argument is whether to write as
     binary; raises Invalid_argument if trying to convert plist to
-    binary fails *)
+    binary fails, raises Failure if writing to a file location
+    fails. *)
 external to_file : string -> bool -> plist -> unit = "plist_ml_to_file"
 
 (** Raises Invalid_argument if file does not exist *)

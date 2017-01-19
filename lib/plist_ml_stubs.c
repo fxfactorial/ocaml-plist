@@ -65,6 +65,8 @@ plist_ml_to_file(value filename, value as_binary, value plist_dict)
   NSAutoreleasePool *myPool = [[NSAutoreleasePool alloc] init];
 
   NSError *error = nil;
+  BOOL write_success = YES;
+
   id d = NSDict(plist_dict);
   NSString *filepath =
     [[NSString alloc] initWithBytes:String_val(filename)
@@ -86,10 +88,13 @@ plist_ml_to_file(value filename, value as_binary, value plist_dict)
   }
 
   caml_release_runtime_system();
-  [d writeToFile:filepath atomically:YES];
+  write_success = [d writeToFile:filepath atomically:YES];
   caml_acquire_runtime_system();
 
   [myPool drain];
+
+  if (write_success == NO) caml_failwith("Couldn't write to file");
+
   CAMLreturn(Val_unit);
 }
 
