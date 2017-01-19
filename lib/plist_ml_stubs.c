@@ -55,9 +55,11 @@ plist_ml_to_file(value filename, value plist_dict)
 {
   CAMLparam2(filename, plist_dict);
   NSMutableDictionary *d = NSDict(plist_dict);
-  caml_acquire_runtime_system();
-  [d writeToFile:@(String_val(filename)) atomically:YES];
+
   caml_release_runtime_system();
+  [d writeToFile:@(String_val(filename)) atomically:YES];
+  caml_acquire_runtime_system();
+
   CAMLreturn(Val_unit);
 }
 
@@ -88,7 +90,11 @@ plist_ml_from_file(value filename)
 
   BOOL file_exists = [[NSFileManager defaultManager] fileExistsAtPath:@(String_val(filename))];
   if (file_exists == NO) caml_invalid_argument("File does not exist");
+
+  caml_release_runtime_system();
   id p = [[NSDictionary alloc] initWithContentsOfFile:@(String_val(filename))];
+  caml_acquire_runtime_system();
+
   plist = caml_alloc_custom(&nsdict_custom_ops, sizeof(id), 0, 1);
   memcpy(Data_custom_val(plist), &p, sizeof(id));
   CAMLreturn(plist);
