@@ -1,5 +1,7 @@
 PKG lambdasoup yojson
 PKG alcotest osx-plutil
 
+PKG plist oasis
+
 S .
 B _build/**

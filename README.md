@@ -1,18 +1,13 @@
 
 
+Good idea that will work on Linux and OS X is
+to use 
 
-Simple way to create Apple plists.
+	// [[NSDictionary alloc] initWithContentsOfFile:(nonnull NSString *)
+and 
 
-```shell
-$ opam install plist
-```
+where d == NSDictionary
 
-```ocaml
+	[d writeToFile:@"test.txt" atomically:YES];
 
-open Plist
-
-let () = 
-  print_endline (to_string (Array [Dict [("Hey", (String "Arnold"))]]))
-```
-
-Plist can also parse simple plists and will flatten dictionaries.
+and on Linux just use openstep

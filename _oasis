@@ -1,33 +1,60 @@
-OASISFormat: 0.4
-Name:        plist
-Version:     0.1
-Synopsis:    Create Apple Plists
-Authors:     Edgar Aroutiounian <edgar.factorial@gmail.com>
-Maintainers: Edgar Aroutiounian <edgar.factorial@gmail.com>
-Homepage:    https://github.com/fxfactorial/ocaml-plist
-License:     BSD-3-clause
-Plugins:     META (0.4), DevFiles (0.4)
-BuildTools: ocamlbuild
-
-Description:
-  Create Apple plists
+# -*- conf -*-
+OASISFormat:   0.4
+Name:          plist
+Version:       0.0.1
+Synopsis:      OCaml Plist manipulation
+Authors:       Edgar Aroutiounian <edgar.factorial@gmail.com>
+Maintainers:   Edgar Aroutiounian <edgar.factorial@gmail.com>
+Homepage:      https://github.com/fxfactorial/ocaml-plist
+License:       BSD-3-clause
+OCamlVersion:  >= 4.04.0
+AlphaFeatures: ocamlbuild_more_args
+Plugins:       META (0.4), DevFiles (0.4)
+BuildTools:    ocamlbuild, ocamldoc
+Description:   Plist
 
 Library plist
-  Path:         .
-  Modules:      Plist
+  Path: lib
+  Modules: Plist
+  install: true
+  if system(macosx)
+    CCOpt:
+      -g -ObjC -fno-objc-arc
+    CClib: -framework Foundation
+  else
+    CCOpt:
+      -x ObjC $(OBJC_FLAGS)
+    CClib:
+      -lgnustep-base -lobjc
+  NativeOpt:
+    -g -w +a-4-40..42-44-45-48
+  ByteOpt: -g -w +a-4-40..42-44-45-48
+  CSources: plist_ml_stubs.c
+  BuildDepends: yojson
+
+Executable object_test
+  Path: examples
+  BuildTools:ocamlbuild
+  install: false
+  MainIs: e1.ml
   CompiledObject: native
-  BuildDepends: lambdasoup, yojson
+  NativeOpt: -g -w +a-4-40..42-44-45-48
+  ByteOpt: -g -w +a-4-40..42-44-45-48
+  BuildDepends: plist
 
-Executable test_plist
-  Path:               .
-  MainIs:             plist_test.ml
-  Build$:             flag(tests)
-  Custom:             true
-  CompiledObject:     best
-  Install:            false
-  BuildDepends:       plist, alcotest, osx-plutil
+SourceRepository master
+  Type:     git
+  Location: https://github.com/fxfactorial/ocaml-plist.git
+  Browser:  https://github.com/fxfactorial/ocaml-plist
 
-Test test_parse_print
-  Run$:               flag(tests)
-  Command:            $test_plist
-  WorkingDirectory:   .
+# Document api
+#   Title:              Documentation and API reference for Plist
+#   Type:               ocamlbuild (0.4)
+#   BuildTools+:        ocamldoc
+#   InstallDir:         $htmldir/javascriptcore
+#   PostCommand:        cp docs/style.css api.docdir && cp api.docdir/* docs
+#   XOCamlbuildPath:    docs
+#   XOCamlbuildModules: src/JavaScriptCore
+#   Install:            true
+#   XOCamlbuildExtraArgs:
+#     "-docflags '-colorize-code -charset utf-8 -hide JavaScriptCore -hide Pervasives'"
