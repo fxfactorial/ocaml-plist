@@ -17,6 +17,8 @@ external to_file : string -> bool -> plist -> unit = "plist_ml_to_file"
 (** Raises Invalid_argument if file does not exist *)
 external from_file : string -> plist = "plist_ml_from_file"
 
+(** Returns the plist as raw binary bytes *)
+external to_bytes : plist -> bytes = "plist_ml_to_bytes"
 
 (** Simple helpers *)
 let from_yojson s = from_string (Yojson.Basic.to_string s)

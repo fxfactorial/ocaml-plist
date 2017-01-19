@@ -21,4 +21,13 @@ let () =
     let error = Plist.from_string "Hello world" in
     ()
   in
-  h ()
+  (try h ();
+   with Invalid_argument e -> print_endline e);
+  let j () =
+    let p =
+      Plist.from_file "test-idea.plist"
+      |> Plist.to_bytes
+    in
+    print_endline p
+  in
+  j ()

@@ -37,9 +37,9 @@ plist_ml_from_string(value str)
 {
   CAMLparam1(str);
   CAMLlocal1(wrapper);
-  NSError *error = nil;
   NSAutoreleasePool *myPool = [[NSAutoreleasePool alloc] init];
 
+  NSError *error = nil;
   NSData *s1 = [NSData dataWithBytes:String_val(str) length:caml_string_length(str)];
   NSMutableDictionary *dict =
     [NSJSONSerialization JSONObjectWithData:s1
@@ -63,6 +63,7 @@ plist_ml_to_file(value filename, value as_binary, value plist_dict)
 {
   CAMLparam3(filename, as_binary, plist_dict);
   NSAutoreleasePool *myPool = [[NSAutoreleasePool alloc] init];
+
   NSError *error = nil;
   id d = NSDict(plist_dict);
   NSString *filepath =
@@ -132,4 +133,23 @@ plist_ml_from_file(value filename)
   [p retain];
   [myPool drain];
   CAMLreturn(plist);
+}
+
+CAMLprim value
+plist_ml_to_bytes(value plist)
+{
+  CAMLparam1(plist);
+  CAMLlocal1(raw_bytes);
+  NSAutoreleasePool *myPool = [[NSAutoreleasePool alloc] init];
+  NSError *error = nil;
+
+  NSData *d = [NSPropertyListSerialization
+		dataWithPropertyList:NSDict(plist)
+			      format:NSPropertyListBinaryFormat_v1_0
+			     options:0
+			       error:&error];
+  raw_bytes = caml_alloc_string([d length]);
+  memcpy(String_val(raw_bytes), [d bytes], [d length]);
+  [myPool drain];
+  CAMLreturn(raw_bytes);
 }
